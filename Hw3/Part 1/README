@@ -1,0 +1,9 @@
+The code can be ran using the command:
+
+python mnist_exp.py
+
+This gives 5 different images as output and saves them as original.png is the original input, fgsm_0.2.png is the input on which fgsm was ran with epsilon=0.2 and np.inf norm, fgsm_2.png is the input on which fgsm was ran with epsilon=2 and 2 norm, pgd_0.2.png is the input on which pgd was ran with epsilon=0.2 with np.inf norm, pgd_2.png is the input on which pgd was ran with epsilon=2 with 2 norm.
+
+The accuracy report has been commented out as it increases the run time of the program drastically, although it can be uncommented in order to get the accuracy report.
+
+The output of fgsm and pgd is clipped from 0 to 1 but it is multiplied by 255 for visulisation.

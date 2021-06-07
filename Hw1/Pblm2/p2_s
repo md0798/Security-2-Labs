@@ -1,0 +1,18 @@
+#make server directory
+mkdir server
+#copy required certificates to server directory
+cp ca/intermediate/private/www.mpd2155.com.key.pem server
+cp ca/intermediate/certs/www.mpd2155.com.cert.pem server
+cp ca/intermediate/certs/ca-chain.cert.pem server
+
+cd server
+#create test.txt
+touch test.txt
+#filling files with name and UNI 
+echo "Meet Desai mpd2155" > test.txt
+#creating test.sign using private key of server
+openssl dgst -sign www.mpd2155.com.key.pem -out test.sign test.txt
+
+#starting s_server for server
+openssl s_server -accept 8443 -cert www.mpd2155.com.cert.pem -key www.mpd2155.com.key.pem -Verify 10 -CAfile ca-chain.cert.pem -HTTP
+

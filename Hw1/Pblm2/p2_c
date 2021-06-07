@@ -1,0 +1,24 @@
+#creating client directory
+mkdir client
+#copying client certificate
+cp ca/intermediate/certs/mpd2155.cert.pem client
+cp ca/intermediate/private/mpd2155.key.pem client
+cp ca/intermediate/certs/ca-chain.cert.pem client
+
+#entering client directory
+cd client
+
+#HTTP request test.txt file from s_server using s_client and storing it in test.txt in client folder
+echo "GET /test.txt HTTP/1.1" |openssl s_client -quiet -connect localhost:8443 -cert mpd2155.cert.pem -key mpd2155.key.pem -CAfile ca-chain.cert.pem > test.txt
+
+
+#HTTP request test.sign file from s_server using s_client and storing it in test.sign in client folder
+echo "GET /test.sign HTTP/1.1" |openssl s_client -quiet -connect localhost:8443 -cert mpd2155.cert.pem -key mpd2155.key.pem -CAfile ca-chain.cert.pem > test.sign
+
+#Getting the public key from the server to verify signature
+echo | openssl s_client -crlf -connect localhost:8443 -cert mpd2155.cert.pem -key mpd2155.key.pem -CAfile ca-chain.cert.pem | openssl x509 -pubkey -noout > pub.key.pem
+
+#verifying sign against public key of server, Should print "Verified OK"
+openssl dgst -sha256 -verify pub.key.pem -signature test.sign test.txt
+
+
